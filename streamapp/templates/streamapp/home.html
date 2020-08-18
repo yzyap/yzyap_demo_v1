@@ -23,16 +23,30 @@
 <body>
   <h1>YZYap Demosu</h1>
 
-  <p>
-    <button onclick="showCode()">Show JavaScript</button>
-    <p id="server_response"></p>
-  </p>
 
-  <div id="blocklyDiv" style="height: 600px; width: 1280px;"></div>
+  <form action="" method="POST"> {% csrf_token %}
+    <table>
+      <tr>
+        <td colspan="4" align="left">
+          <input type="submit" name="submit_code" value="Submit Code">
+          <input type="submit" name="terminate_code" value="Terminate Code">
+          <input type="reset" value="Clear All">
+          <button onclick="showCode()">Code</button>
+        </td>
+      </tr>
 
+        <tr>
+          <td><div id="blocklyDiv" style="height: 600px; width: 1280px;"></div></td>
+          <td><div id="code">{{ form.code }}</div></td>
+        </tr>
 
-  <img src="{% url 'video_feed' %}">
-  <img src="{% url 'video_feed_processed' %}">  
+        <tr>
+          <td><img src="{% url 'video_feed' %}"></td>
+          <td><img src="{% url 'video_feed_processed' %}"></td>
+        </tr>
+
+    </table>
+</form>
 
   <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
     <category name="LOGIC" colour="%{BKY_LOGIC_HUE}">
