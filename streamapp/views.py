@@ -1,14 +1,39 @@
 from django.shortcuts import render
 from django.http.response import StreamingHttpResponse
+from django.http import HttpResponse
 from streamapp.camera import VideoCamera, IPWebCam
 from . import forms
-# Create your views here.
+from . import CompilerUtils
+from .CompilerUtils import Compiler
 
+executor = Compiler()
+
+# Create your views here.
 def index(request):
 	template_data = {}
-	form = forms.CodeExecutorForm()
-	template_data['form'] = form
-	return render(request, 'streamapp/home.html', template_data)
+	if request.method == 'POST':
+		if 'submit_code' in request.POST:
+			form = forms.CodeExecutorForm(request.POST)
+			if form.is_valid():
+				code = form.cleaned_data['code']
+				executor.set_code(code)
+				execution_result = executor.execute()
+				executor.delete_code_file()
+				return HttpResponse("Worked!")
+			else:
+				return HttpResponse("Cannot sanitize form data")
+
+		elif 'terminate_code' in request.POST:
+			if not executor:
+				executor.terminate()
+				return HttpResponse("Terminated!")
+			else:
+				return HttpResponse("No valid run session!")
+	else:
+		form = forms.CodeExecutorForm()
+		template_data['form'] = form
+		return render(request, 'streamapp/home.html', template_data)
+
 
 def gen(camera):
 	while True:
@@ -28,13 +53,4 @@ def video_feed(request):
 
 def video_feed_processed(request):
 	return StreamingHttpResponse(gen1(VideoCamera()),
-					content_type='multipart/x-mixed-replace; boundary=frame')					
-
-
-def webcam_feed(request):
-	return StreamingHttpResponse(gen(IPWebCam()),
 					content_type='multipart/x-mixed-replace; boundary=frame')
-
-def blockly_code(request):
-	code = request.GET.get("code")
-	print(code)
