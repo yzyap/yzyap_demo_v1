@@ -5,8 +5,11 @@ from streamapp.camera import VideoCamera, IPWebCam
 from . import forms
 from . import CompilerUtils
 from .CompilerUtils import Compiler
+import cv2
+import numpy as np
 
 executor = Compiler()
+video = cv2.VideoCapture("http://192.168.1.43:8080/?action=stream")
 
 # Create your views here.
 def index(request):
@@ -41,9 +44,17 @@ def gen(camera):
 		yield (b'--frame\r\n'
 				b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
-def gen1(camera):
+def gen1(camera):	
 	while True:
-		frame = camera.process_frame()
+		success, image = video.read()
+		# We are using Motion JPEG, but OpenCV defaults to capture raw images,
+		# so we must encode it into JPEG in order to correctly display the
+		# video stream.
+
+		edges = cv2.Canny(image,100,200)
+		ret, jpeg = cv2.imencode('.jpg', edges)
+
+		frame = jpeg.tobytes()
 		yield (b'--frame\r\n'
 				b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')				
 
