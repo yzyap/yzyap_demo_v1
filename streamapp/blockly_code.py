@@ -1,5 +1,5 @@
 import cv2
-from camera import Camera
+from .camera import Camera
 
 def blockly_code(camera):
     video = camera.init()

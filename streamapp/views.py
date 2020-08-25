@@ -14,23 +14,27 @@ def index(request):
 	csc = codeServerComm()
 	if request.method == 'POST':
 		form = forms.CodeExecutorForm(request.POST)
+		template_data['form'] = form		
 		if form.is_valid():
 			if 'submit_code' in request.POST:			
 				code = form.cleaned_data['code']
-				print(code)
-				csc.set_code(code)
-				runserver_result = csc.run_server()
-				template_data['form'] = form
-				template_data['log'] = "Code Server Worked"
+				csc.run_server_thread()
+
+#				if runserver_result == ExecutionStatus.ACC:
+#					print("execute_acc")
+#					response = requests.post("http://0.0.0.0:5000/loadcodefile", json={'code':code})
+#					template_data['log'] = "Code Server Worked"
+#				else:
+#					print("Code Server Proble")
+#					template_data['log'] = "Code Server Problem!"
+#
 				return render(request, 'streamapp/home.html', template_data)
 
 			elif 'terminate_code' in request.POST:
 					response = requests.get('http://0.0.0.0:5000/shutdown')
-					template_data['form'] = form
 					template_data['log'] = "Code Server Terminated"
 					return render(request, 'streamapp/home.html', template_data)
 		else:
-			template_data['form'] = form
 			template_data['log'] = "Cannot sanitize form data"
 			return render(request, 'streamapp/home.html', template_data)
 
