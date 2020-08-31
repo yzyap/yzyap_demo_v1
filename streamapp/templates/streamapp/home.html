@@ -23,7 +23,7 @@
 <body>
   <h1>YZYap Demosu</h1>
   <p>Msg: {{log}}</p>
-
+  <button onclick="showCode()">Code</button>
   <form action="" method="POST"> {% csrf_token %}
     <table>
       <tr>
@@ -31,18 +31,17 @@
           <input type="submit" name="submit_code" value="Submit Code">
           <input type="submit" name="terminate_code" value="Terminate Code">
           <input type="reset" value="Clear All">
-          <button onclick="showCode()">Code</button>
         </td>
       </tr>
 
         <tr>
-          <td><div id="blocklyDiv" style="height: 600px; width: 1280px;"></div></td>
+          <!--<td><div id="blocklyDiv" style="height: 600px; width: 1280px;"></div></td>-->
           <td><div id="code">{{ form.code }}</div></td>
         </tr>
 
         <tr>
-          <td><img src="{% url 'video_feed' %}"></td>
-          <td><img src="http://0.0.0.0:5000/video_feed"></td>
+          <td><img src="{% url 'video_feed' %}">
+          <img src="http://127.0.0.1:5000/video_feed"></td>
         </tr>
 
     </table>
@@ -382,18 +381,14 @@
 
       function showCode() {
         var code = Blockly.Python.workspaceToCode(demoWorkspace);
-        alert(code);
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-          if (this.readyState == 4 && this.status == 200) {
-              // Typical action to be performed when the document is ready:
-              //document.getElementById("server_response").innerHTML = xhr.responseText;
-          }
-        };
-
-        xhr.open("GET", "blockly_code", true);
-        xhr.send("code=abc")    
+        alert(code); 
     }         
+
+
+    var btnTest = document.getElementById('testButton');
+    btnTest.onclick = function() {
+          alert("Button pressed!");
+      }      
   </script>
 
 </body>

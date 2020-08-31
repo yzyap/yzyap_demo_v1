@@ -8,7 +8,8 @@ class Camera:
 
     def init(self):
         self.stream_source = "http://192.168.1.43:8080/?action=stream"
-        self.video = cv2.VideoCapture(self.stream_source)
+        #self.video = cv2.VideoCapture(self.stream_source)
+        self.video = cv2.VideoCapture(0)
         return self.video
 
     def get_frame(self):

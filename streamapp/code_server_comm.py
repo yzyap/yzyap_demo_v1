@@ -2,7 +2,8 @@ from enum import Enum
 import multiprocessing
 import subprocess
 import os
-from . import flask_server
+import requests
+import time
 
 # The ExecutionStatus class is an enum, one of which will be returned by the execute method
 class ExecutionStatus(Enum):
@@ -27,19 +28,32 @@ class codeServerComm:
 
     def set_code(self,code):
         self.code = code
-        return
+        return   
 
     def run_server_thread(self):
         server_worker = multiprocessing.Process(name='server worker', target=self.run_server)
         server_worker.start()
+        #check the code server start
+        try_count = 50
+        code_server_live = False
+        while try_count>0:
+            try:
+                try_count-=1
+                time.sleep(0.1)
+                print("is live?")
+                response = requests.get('http://127.0.0.1:5000/islive')
+                code_server_live = True
+                break
+            except:
+                pass
+
 
     def run_server(self):
-        command = ["python", "/home/mg/cv_workspace/yzyap_repos/yzyap_demo_v1/streamapp/flask_server.py"]
+        command = ["python", r"D:\work\YZYap\YZYap_Repos\yzyap_demo_v1\flask_runner\flask_server.py"]
         self.outputs = []
         self.errors = []   
 
-        self.process = subprocess.Popen(command, stdout=subprocess.PIPE,  stderr=subprocess.PIPE)  
-
+        self.process = subprocess.Popen(command, stdout=subprocess.PIPE,  stderr=subprocess.PIPE, shell=True)  
         try:
             o, e = self.process.communicate(timeout=self.maxExecTime)
             self.outputs.append(o.decode('utf-8'))
