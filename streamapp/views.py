@@ -8,6 +8,10 @@ import cv2
 import numpy as np
 import requests
 import os
+import time
+from .video_source import VideoSource
+
+vs = VideoSource()
 
 def generate_code_file(filename, template, code):
 	if template is not None:
@@ -44,6 +48,7 @@ def index(request):
 					response = requests.get('http://127.0.0.1:5000/shutdown')
 					template_data['log'] = "Code Server Terminated"
 					return render(request, 'streamapp/home.html', template_data)
+			
 		else:
 			template_data['log'] = "Cannot sanitize form data"
 			return render(request, 'streamapp/home.html', template_data)
@@ -54,17 +59,52 @@ def index(request):
 		template_data['log'] = "New Code Project"
 		return render(request, 'streamapp/home.html', template_data)
 
-def gen():
-	#video = cv2.VideoCapture("http://192.168.1.43:8080/?action=stream")
-	#video = cv2.imread('lena.jpg')
-	video = cv2.VideoCapture(r'C:\test.mp4')
-	while True:		
+def gen(vs):
+	video = cv2.VideoCapture(0)	
+	while video.isOpened():		
 		success, image = video.read()
-		ret, jpeg = cv2.imencode('.jpg', image)
-		frame=jpeg.tobytes()
-		yield (b'--frame\r\n'
-				b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')		
-	
+		ret, jpeg = cv2.imencode('.jpg', image)			
+		frame = jpeg.tobytes()
+		if frame != None:
+			yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+		
+
+        		
 def video_feed(request):
-	return StreamingHttpResponse(gen(),
-					content_type='multipart/x-mixed-replace; boundary=frame')						
+	return StreamingHttpResponse(gen(VideoSource()),
+					content_type='multipart/x-mixed-replace; boundary=frame')
+
+def nesne_ogrenme(request):
+	template_data = {}
+	if request.method == 'POST':
+		form = forms.NesneOgrenmeForm(request.POST)
+		template_data['form'] = form
+		if form.is_valid():
+			if 'teach' in request.POST:
+				bbox = (form.cleaned_data['form_x'],
+							form.cleaned_data['form_y'],
+								form.cleaned_data['form_width'],
+									form.cleaned_data['form_height'])
+
+				bb_etiket = form.cleaned_data['form_etiket']
+
+				#tracker = cv2.TrackerMOSSE_create()
+				#ok = tracker.init(frame, bbox)
+
+				print(bbox[0],bbox[1],bbox[2],bbox[3])
+				return render(request, r'streamapp/nesne_ogrenme.html', template_data)
+
+		else:
+			template_data['log'] = "Cannot sanitize form data"
+			return render(request, r'streamapp/nesne_ogrenme.html', template_data)
+
+	else:
+		form = forms.NesneOgrenmeForm()
+		template_data['form'] = form
+		template_data['log'] = "New Code Project"
+		return 	render(request, 'streamapp/nesne_ogrenme.html', template_data)											
+
+
+
+
+										

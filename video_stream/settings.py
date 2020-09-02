@@ -118,4 +118,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/home/mg/cv_workspace/mydjango_server/videostream_test/Django_VideoStream/streamapp/static/'
+#STATIC_URL = '/home/mg/cv_workspace/mydjango_server/videostream_test/Django_VideoStream/streamapp/static/'
+#STATIC_URL = "D:\\work\\YZYap\\YZYap_Repos\\yzyap_demo_v1\\streamapp\\static\\"
+STATIC_URL = '/static/'
