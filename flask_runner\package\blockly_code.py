@@ -6,7 +6,7 @@ def blockly_code(camera):
 
   # Creating an VideoCapture object
   # This will be used for image acquisition later in the code.
-  cap = cv2.VideoCapture("http://192.168.1.43:8080/?action=stream")
+  cap = cv2.VideoCapture("http://192.168.1.35:8081/?action=stream")
 
   # We give some time for the camera to setup
   time.sleep(3)
@@ -54,10 +54,3 @@ def blockly_code(camera):
     ret, jpeg = cv2.imencode('.jpg', mask2)
     frame = jpeg.tobytes()
     yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-
-
-
-    
-    
-    
-    

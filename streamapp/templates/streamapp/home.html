@@ -1,9 +1,10 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <title>YZYap Demo</title>
-  {% load static %}
   <script src="{% static "/js/blockly_compressed.js" %}"></script>
   <script src="{% static "/js/blocks_compressed.js" %}"></script>
   <script src="{% static "/js/python_compressed.js" %}"></script>
@@ -22,7 +23,7 @@
 
   </style>
 </head>
-<body>
+<body onload = "init()">
   <h1>YZYap Demosu</h1>
   <p>Msg: {{log}}</p>
   <button onclick="showCode()">Code</button>
@@ -42,15 +43,20 @@
           <td><div id="code">{{ form.code }}</div></td>
         </tr>
 
-        <tr>
-          <td>
-            <img src="http://127.0.0.1:8000/video_feed">
-            <img src="http://127.0.0.1:5000/video_feed">
-          </td>
-        </tr>
-
     </table>
 </form>
+
+<table>
+  <tr>
+    <td>
+      <canvas id="canvas" width="640" height="480" style="background: url('http://127.0.0.1:8000/video_feed')" ></canvas>
+      <img src="http://127.0.0.1:5000/video_feed">
+      <br/>
+      <button onclick="learnObject()"> Öğren </button>
+      <p id="learnObjectResponce"></p>
+    </td>
+  </tr>  
+</table>
 
   <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
     <category name="Robot" colour="%{BKY_COLOUR_HUE}">
@@ -62,20 +68,69 @@
   </xml>
 
   <script>
+    var c = document.getElementById('canvas');
+    var ctx = c.getContext('2d');
+    var imageObj = null;
+    var rect = {};
+    var drag = false;    
+
+    function init(){
+      console.log('init fired..') ;
+
+      c.addEventListener("mousedown", function(e) 
+        { 
+          mouseDown(c, e); 
+        }); 
+
+      c.addEventListener('mouseup', mouseUp, false);
+      c.addEventListener('mousemove', function(e) 
+        { 
+          mouseMove(c, e); 
+        });        
+    }
+
+    function mouseDown(canvas, event) {
+      let canvasrect = canvas.getBoundingClientRect();
+      rect.startX = event.clientX - canvasrect.left;
+      rect.startY = event.clientY - canvasrect.top;
+      drag = true;
+    }  
+
+    function mouseUp() { 
+      drag = false; 
+    }
+
+    function mouseMove(canvas, event) {
+        if (drag) {
+            let canvasrect = canvas.getBoundingClientRect();  
+            ctx.clearRect(0, 0, 640, 480);
+            rect.w = (event.clientX  - canvasrect.left) - rect.startX;
+            rect.h = (event.clientY - canvasrect.top) - rect.startY;
+            ctx.strokeStyle = 'red';
+            ctx.strokeRect(rect.startX, rect.startY, rect.w, rect.h);
+        }
+    } 
+
+    function learnObject(){
+      var xhttp = new XMLHttpRequest();
+
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          document.getElementById("learnObjectResponce").innerHTML = this.responseText;
+        }
+        else{
+          document.getElementById("learnObjectResponce").innerHTML = "Some error occured"
+        }
+      };
+
+      xhttp.open("POST", "http://127.0.0.1:8000/learnobject", true);
+      xhttp.send(rect);
+    }   
+
     var demoWorkspace = Blockly.inject('blocklyDiv',
         {media: '{% static "/media/" %}',          
-         toolbox: document.getElementById('toolbox')});
+         toolbox: document.getElementById('toolbox')});   
 
-      function showCode() {
-        var code = Blockly.Python.workspaceToCode(demoWorkspace);
-        alert(code); 
-    }         
-
-
-    var btnTest = document.getElementById('testButton');
-    btnTest.onclick = function() {
-          alert("Button pressed!");
-      }      
   </script>
 
 </body>

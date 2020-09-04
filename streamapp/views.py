@@ -10,6 +10,11 @@ import requests
 import os
 import time
 from .video_source import VideoSource
+import json
+from django.contrib.auth.forms import UserCreationForm
+from django.views.generic.edit import CreateView
+from django.contrib.auth.models import User
+from django.http import JsonResponse
 
 vs = VideoSource()
 
@@ -25,7 +30,7 @@ def generate_code_file(filename, template, code):
 
 		
 # Create your views here.
-def index(request):
+def home(request):
 	template_data = {}
 	csc = codeServerComm()
 	if request.method == 'POST':
@@ -60,7 +65,14 @@ def index(request):
 		return render(request, 'streamapp/home.html', template_data)
 
 def gen(vs):
-	video = cv2.VideoCapture(0)	
+	video = cv2.VideoCapture("http://192.168.1.43:8080/?action=stream")	
+
+	#the first image is a bit darker so i get 30 frames to initialize camera
+	#and get rid of this dark first frame.
+	for i in range(10):
+		success, image = video.read()
+
+	#start the actual streaming
 	while video.isOpened():		
 		success, image = video.read()
 		ret, jpeg = cv2.imencode('.jpg', image)			
@@ -102,7 +114,49 @@ def nesne_ogrenme(request):
 		form = forms.NesneOgrenmeForm()
 		template_data['form'] = form
 		template_data['log'] = "New Code Project"
-		return 	render(request, 'streamapp/nesne_ogrenme.html', template_data)											
+		return 	render(request, 'streamapp/nesne_ogrenme.html', template_data)	
+
+def learnobject(request):
+  if request.is_ajax() and request.POST:
+    items = ['item1', 'item2', 'item3',]
+    data = json.dumps(items)
+    print("ajax post received")
+    return HttpResponse(data, content_type='application/json')    										    
+  else:
+    raise Http404
+
+class SignUpView(CreateView):
+  template_name = 'streamapp/signup.html'
+  form_class = UserCreationForm  
+
+  from django.contrib.auth.models import User
+from django.http import JsonResponse
+
+def validate_username(request):
+  print("validate user name")
+  username = request.GET.get('username', None)
+  data = {
+    'is_taken': User.objects.filter(username__iexact=username).exists()
+  }
+  if data['is_taken']:
+    data['error_message'] = 'A user with this username already exists.'
+  else:
+    data['error_message'] = 'No error'
+  
+  return JsonResponse(data)
+
+
+def index(request):
+
+  if request.method == 'POST':
+    form = forms.CodeExecutorForm(request.POST)
+    if form.is_valid():
+      pass
+  else:
+    form = forms.CodeExecutorForm()
+
+  return render(request, 'streamapp/index.html', {'form': form})
+
 
 
 
