@@ -1,0 +1,102 @@
+{% extends 'streamapp/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-6">
+
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">Kodlama</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="#">Yapay Zeka</a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Dropdown</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="#">Link 1</a>
+            <a class="dropdown-item" href="#">Link 2</a>
+            <a class="dropdown-item" href="#">Link 3</a>
+          </div>
+        </li>
+      </ul>
+
+    </div>
+    <div class="col-6 bg-warning">
+      <div class="h-100 w-100 d-inline-block" style="width: 120px; background-color: rgba(0,0,255,.1)">Height 100%</div>
+      <div class="row">
+        <div class="col-6 bg-light">
+          <canvas id="canvas" width="640" height="480" style="background: url('http://127.0.0.1:8000/video_feed')" ></canvas>
+        </div>
+        <div class="col-6 bg-secondary">.col-6</div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+{% endblock %}
+
+
+{% block javascript %}
+<script src="{% static "/js/blockly_compressed.js" %}"></script>
+<script src="{% static "/js/blocks_compressed.js" %}"></script>
+<script src="{% static "/js/python_compressed.js" %}"></script>
+<script src="{% static "/js/en.js" %}"></script>
+<script src="{% static "/js/robot.js" %}"></script>  
+
+<script>
+
+var c = document.getElementById('canvas');
+var ctx = c.getContext('2d');
+var imageObj = null;
+var rect = {};
+var drag = false;    
+
+function init(){
+  console.log('init fired..') ;
+
+  c.addEventListener("mousedown", function(e) 
+    { 
+      mouseDown(c, e); 
+    }); 
+
+  c.addEventListener('mouseup', mouseUp, false);
+  c.addEventListener('mousemove', function(e) 
+    { 
+      mouseMove(c, e); 
+    });        
+}
+
+function mouseDown(canvas, event) {
+  let canvasrect = canvas.getBoundingClientRect();
+  rect.startX = event.clientX - canvasrect.left;
+  rect.startY = event.clientY - canvasrect.top;
+  drag = true;
+}  
+
+function mouseUp() { 
+  drag = false; 
+}
+
+function mouseMove(canvas, event) {
+    if (drag) {
+        let canvasrect = canvas.getBoundingClientRect();  
+        ctx.clearRect(0, 0, 640, 480);
+        rect.w = (event.clientX  - canvasrect.left) - rect.startX;
+        rect.h = (event.clientY - canvasrect.top) - rect.startY;
+        ctx.strokeStyle = 'red';
+        ctx.strokeRect(rect.startX, rect.startY, rect.w, rect.h);
+    }
+}
+
+
+init();
+
+</script>
+{% endblock %}
+
+
