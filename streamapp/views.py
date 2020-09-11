@@ -10,6 +10,7 @@ import requests
 import os
 import time
 from .video_source import VideoSource
+from .dnn_object_detection import DnnObjectDetection
 import json
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import CreateView
@@ -65,20 +66,31 @@ def home(request):
 		return render(request, 'streamapp/home.html', template_data)
 
 def gen(vs):
-	video = cv2.VideoCapture("http://192.168.1.43:8080/?action=stream")	
 
-	#the first image is a bit darker so i get 30 frames to initialize camera
-	#and get rid of this dark first frame.
-	for i in range(10):
-		success, image = video.read()
+  objDetector = DnnObjectDetection(r"yolo_models/MobileNet_SSD_v3/coco.names",
+    r"yolo_models/MobileNet_SSD_v3/ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt",
+      r"yolo_models/MobileNet_SSD_v3/frozen_inference_graph.pb")
 
-	#start the actual streaming
-	while video.isOpened():		
-		success, image = video.read()
-		ret, jpeg = cv2.imencode('.jpg', image)			
-		frame = jpeg.tobytes()
-		if frame != None:
-			yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+  
+  video = cv2.VideoCapture("http://192.168.1.43:8080/?action=stream")	
+  #video = cv2.VideoCapture("http://192.168.1.35:8081/?action=stream")	
+
+
+  #the first image is a bit darker so i get 30 frames to initialize camera
+  #and get rid of this dark first frame.
+    # We give some time for the camera to setup
+  time.sleep(3)
+
+  for i in range(10):
+    success, image = video.read()
+    
+  #start the actual streaming
+  while video.isOpened():		
+    success, image = video.read()
+    frame = objDetector.runModel(image)
+    ret, jpeg = cv2.imencode('.jpg', frame)
+    frame = jpeg.tobytes()
+    yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 		
 
         		
