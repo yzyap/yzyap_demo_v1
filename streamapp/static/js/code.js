@@ -1,7 +1,3 @@
-{% load static %}
-
-<script>
-
 /*var c = document.getElementById('canvas');
 var ctx = c.getContext('2d');
 var imageObj = null;
@@ -75,9 +71,7 @@ function fPageLoad(evt)
 
   fBodyResize();
 
-  openTab(evt,"bloktab")     
-
-  resetPanTilt();       
+  openTab(evt,"bloktab")            
 }
 
 function openTab(evt, tabName) {
@@ -104,45 +98,8 @@ function openTab(evt, tabName) {
     if(demoWorkspace == null)
       demoWorkspace = Blockly.inject('blocklyDiv',
           {
-            grid:
-          {spacing: 25,
-           length: 3,
-           colour: '#ccc',
-           snap: true},
-            media: "{% static "/media/" %}",          
-            toolbox: document.getElementById('toolbox'),
-            zoom:
-            {controls: true,
-             wheel: true}
+            media: '{% static "/media/" %}',          
+            toolbox: document.getElementById('toolbox')
             });   
   }
-
-  else if(tabName == "pythontab"){
-    var code = Blockly.Python.workspaceToCode(demoWorkspace);
-    code = code.replace(/ /g, '\u00a0');
-    code = code.replace(/\n/g, "<br />");
-    document.getElementById("sourceCode").innerHTML = code;
-  }
 }
-
-function saveWorkspace() {
-    var xmlDom = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
-    var xmlText = Blockly.Xml.domToPrettyText(xmlDom);
-    
-    localStorage.setItem("blockly.xml", xmlText);
-}
-
-function loadWorkspace() {
-    var xmlText = localStorage.getItem("blockly.xml");
-    if (xmlText) {
-        Blockly.mainWorkspace.clear();
-        xmlDom = Blockly.Xml.textToDom(xmlText);
-        Blockly.Xml.domToWorkspace(demoWorkspace, xmlDom);
-    }
-}
-
-function clearWorkspace(){
-  Blockly.mainWorkspace.clear();
-}
-
-</script>

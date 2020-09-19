@@ -1,109 +1,142 @@
-Blockly.Blocks['sag'] = {
-    init: function() {
-      this.appendDummyInput()
-          .appendField(new Blockly.FieldDropdown([["sag","sag"]]), "sag")
-          .appendField(new Blockly.FieldNumber(0, 0), "adim_sayisi")
-          .appendField("->Adım")
-          .appendField(new Blockly.FieldNumber(0, 0), "hiz")
-          .appendField("->Hız");
-      this.setInputsInline(true);
-      this.setPreviousStatement(true, null);
-      this.setNextStatement(true, null);
-      this.setColour(123);
-   this.setTooltip("");
-   this.setHelpUrl("");
-    }
-  };
-  
-  Blockly.Python['sag'] = function(block) {
-    var dropdown_sag = block.getFieldValue('sag');
-    var number_adim_sayisi = block.getFieldValue('adim_sayisi');
-    var number_hiz = block.getFieldValue('hiz');
-    if (number_adim_sayisi >= 0 && number_hiz >=0){
-      alert("kod")
-    }
-    return code;
-  };
+Blockly.Blocks['yon'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([["ileri","ileri"], ["geri","geri"],["sag","sag"], ["sol","sol"],  [{"src":"https://www.gstatic.com/codesite/ph/images/star_on.gif","width":15,"height":15,"alt":"*"},"OPTIONNAME"]]), "field_yon")
+        .appendField(new Blockly.FieldNumber(0, 0), "adim_sayisi")
+        .appendField("->Adım")
+        .appendField(new Blockly.FieldNumber(0, 0), "hiz")
+        .appendField("->Hız");
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(123);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
 
-  Blockly.Blocks['sol'] = {
-    init: function() {
-      this.appendDummyInput()
-          .appendField(new Blockly.FieldDropdown([["sol","sol"]]), "sol")
-          .appendField(new Blockly.FieldNumber(0, 0), "adim_sayisi")
-          .appendField("->Adım")
-          .appendField(new Blockly.FieldNumber(0, 0), "hiz")
-          .appendField("->Hız");
-      this.setInputsInline(true);
-      this.setPreviousStatement(true, null);
-      this.setNextStatement(true, null);
-      this.setColour(123);
-   this.setTooltip("");
-   this.setHelpUrl("");
-    }
-  };
+Blockly.Python['yon'] = function(block) {
+  var code = ""
+  var dropdown_yon = block.getFieldValue('field_yon');
+  var number_adim_sayisi = block.getFieldValue('adim_sayisi');
+  var number_hiz = block.getFieldValue('hiz');
 
-  Blockly.Python['sol'] = function(block) {
-    var dropdown_sol = block.getFieldValue('sol');
-    var number_adim_sayisi = block.getFieldValue('adim_sayisi');
-    var number_hiz = block.getFieldValue('hiz');
-    // TODO: Assemble Python into code variable.
-    var code = '...\n';
-    return code;
-  };
+  if(dropdown_yon == "ileri"){
+      code = 'Robot(ileri,';
+  }
 
-  Blockly.Blocks['ileri'] = {
-    init: function() {
-      this.appendDummyInput()
-          .appendField(new Blockly.FieldDropdown([["ileri","ileri"]]), "ileri")
-          .appendField(new Blockly.FieldNumber(0, 0), "adim_sayisi")
-          .appendField("->Adım")
-          .appendField(new Blockly.FieldNumber(0, 0), "hiz")
-          .appendField("->Hız");
-      this.setInputsInline(true);
-      this.setPreviousStatement(true, null);
-      this.setNextStatement(true, null);
-      this.setColour(123);
-   this.setTooltip("");
-   this.setHelpUrl("");
-    }
-  };
+  else if (dropdown_yon == "geri"){
+      code = 'Robot(geri,';
+  }
 
-  Blockly.Python['ileri'] = function(block) {
-    var dropdown_ileri = block.getFieldValue('ileri');
-    var number_adim_sayisi = block.getFieldValue('adim_sayisi');
-    var number_hiz = block.getFieldValue('hiz');
-    // TODO: Assemble Python into code variable.
-    var code = 'SendRobot(ileri,';
-    code = code + number_adim_sayisi;
-    code = code + ',';
-    code = code + number_hiz;
-    code = code + ')'
+  else if (dropdown_yon == "sag"){
+      code = 'Robot(sag,';
+  }
 
-    return code;
-  };
+  else if (dropdown_yon == "sol"){
+      code = 'Robot(sol,';
+  }
 
-  Blockly.Blocks['geri'] = {
-    init: function() {
-      this.appendDummyInput()
-          .appendField(new Blockly.FieldDropdown([["geri","geri"]]), "geri")
-          .appendField(new Blockly.FieldNumber(0, 0), "adim_sayisi")
-          .appendField("->Adım")
-          .appendField(new Blockly.FieldNumber(0, 0), "hiz")
-          .appendField("->Hız");
-      this.setInputsInline(true);
-      this.setPreviousStatement(true, null);
-      this.setNextStatement(true, null);
-      this.setColour(123);
-   this.setTooltip("");
-   this.setHelpUrl("");
-    }
-  };
+  code = code + number_adim_sayisi;
+  code = code + ',';
+  code = code + number_hiz;
+  code = code + ')'
+  code = code + '\n';
 
-  Blockly.Python['geri'] = function(block) {
-    var dropdown_geri = block.getFieldValue('geri');
-    var number_adim_sayisi = block.getFieldValue('adim_sayisi');
-    var number_hiz = block.getFieldValue('hiz');
-    // TODO: Assemble Python into code variable.
-    var code = '...\n';
-    return code;
-  };
+  return code;
+};
+
+Blockly.Blocks['bekle'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldNumber(0), "waiting_time")
+        .appendField("sn")
+        .appendField(new Blockly.FieldLabelSerializable("bekle"), "bekle");
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(180);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+
+Blockly.Python['bekle'] = function(block) {
+var number_waiting_time = block.getFieldValue('waiting_time');
+// TODO: Assemble Python into code variable.
+var code = 'time.sleep(' + number_waiting_time + ')' + '\n';
+return code;
+};
+
+
+Blockly.Blocks['adim_boyu'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldLabelSerializable("Adım Boyu"), "adim_boyu")
+        .appendField(new Blockly.FieldNumber(0.1, 1), "adim_uzunlugu");
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+
+Blockly.Python['adim_boyu'] = function(block) {
+  var number_adim_uzunlugu = block.getFieldValue('adim_uzunlugu');
+  // TODO: Assemble Python into code variable.
+  var code = 'Robot(adimboyu,';
+  code = code + number_adim_uzunlugu;
+  code = code + ')'
+  code = code + '\n';
+  return code;
+};
+
+Blockly.Blocks['camera'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("kamera")
+        .appendField(new Blockly.FieldDropdown([["yukarı","yukari"], ["aşağı","asagi"]]), "camy")
+        .appendField(new Blockly.FieldNumber(0, 0, 750), "cameray")
+        .appendField(new Blockly.FieldDropdown([["sağ","sag"], ["sol","sol"]]), "camx")
+        .appendField(new Blockly.FieldNumber(0, 0, 750), "camerax");
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+
+Blockly.Python['camera'] = function(block) {
+  var dropdown_camy = block.getFieldValue('camy');
+  var number_cameray = block.getFieldValue('cameray');
+  var dropdown_camx = block.getFieldValue('camx');
+  var number_camerax = block.getFieldValue('camerax');
+  // TODO: Assemble Python into code variable.
+  var code = '';
+  if (dropdown_camy == "yukari") {
+      code = code + 'Robot(cam,yukari,';
+  }
+  else if (dropdown_camy == "asagi") {
+      code = code + 'Robot(cam,asagi,';
+  }
+  code = code + number_cameray;
+  code = code + ')'
+  code = code + '\n';
+
+  if (dropdown_camx == "sag"){
+      code = code + 'Robot(cam,sag,';
+  }
+  else if (dropdown_camx == "sol"){
+      code = code + 'Robot(cam,sol,';
+  }
+  code = code + number_camerax;
+  code = code + ')'
+  code = code + '\n';
+
+  return code;
+
+};

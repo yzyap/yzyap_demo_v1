@@ -159,7 +159,6 @@ def validate_username(request):
 
 
 def index(request):
-
   if request.method == 'POST':
     form = forms.CodeExecutorForm(request.POST)
     if form.is_valid():
@@ -168,6 +167,8 @@ def index(request):
     form = forms.CodeExecutorForm()
 
   return render(request, 'streamapp/index.html', {'form': form})
+
+
 
 
 

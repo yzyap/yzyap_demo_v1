@@ -10,7 +10,7 @@
       <button class="tablinks" onclick="openTab(event, 'pythontab')">Python</button>
       <button class="tablinks" onclick="openTab(event, 'yztab')">Yapay Zeka</button>
       <div style="float:right">
-        <button id="trashButton" class="notext" title="...">
+        <button id="trashButton" class="notext" title="..." onclick="clearWorkspace()">
           <img src="{% static "/media/1x1.gif" %}" class="trash icon21">
         </button>
         <button id="linkButton" class="notext" title="...">
@@ -19,6 +19,12 @@
         <button id="runButton" class="notext primary" title="...">
           <img src="{% static "/media/1x1.gif" %}" class="run icon21">
         </button>
+        <button id="saveButton" class="notext primary" title="Save" onclick="saveWorkspace()">
+          <img src="{% static "/media/1x1.gif" %}" class="run icon22">
+        </button>        
+        <button id="loadButton" class="notext primary" title="Load" onclick="loadWorkspace()">
+          <img src="{% static "/media/1x1.gif" %}" class="run icon22">
+        </button>        
       </div>      
     </div>
 
@@ -28,7 +34,7 @@
     </div>
 
     <div id="pythontab" class="codewindow_tabcontent">
-      <p>python</p>
+      <div id="sourceCode"></div>
     </div>
 
     <div id="yztab" class="codewindow_tabcontent">
@@ -36,13 +42,19 @@
     </div>
   </div>
   <div id = "videoWindow" class="grid-item video_container">
-    <div id="tabButton" style="padding:5px">
+    <div class = "tab" id="tabButton" style="padding:5px">
       <button class="tablinks">Canlı</button>
       <button class="tablinks">İşlenmiş</button>
     </div> 
     <canvas id="canvas" width="640" height="480" style="background: url('http://127.0.0.1:8000/video_feed')" ></canvas>
   </div>
-  <div id = "settingsWindow" class="grid-item settings_container">3</div>  
+  <div id = "settingsWindow" class="grid-item settings_container">
+    <div class = "tab"  id="tabButton" style="padding:10px">
+      <button class="tablinks">Robot</button>
+      <button class="tablinks">Mesajlar</button>
+      {% include "streamapp/robot_hareket.html" %}      
+    </div>    
+  </div>  
 </div>
 
 {% include "streamapp/blockly.html" %}
@@ -53,13 +65,14 @@
 
 {% block javascript %}
 <script src="{% static "/js/blockly_compressed.js" %}"></script>
-<script src="{% static "/js/blocks_compressed.js" %}"></script>
 <script src="{% static "/js/python_compressed.js" %}"></script>
+<script src="{% static "/js/blocks_compressed.js" %}"></script>
 <script src="{% static "/js/en.js" %}"></script>
 <script src="{% static "/js/robot.js" %}"></script>  
 <!--<script src="{% static "/js/code.js" %}"></script> -->
 
 {% include "streamapp/code.html" %}
+{% include "streamapp/robot_hareket_code.html" %}
 
 {% endblock %}
 

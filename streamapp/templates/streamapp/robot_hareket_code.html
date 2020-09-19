@@ -1,0 +1,58 @@
+<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
+        <script>
+          
+		$(document).ready(function(){
+      robot_ip = "http://192.168.1.35:4900"
+		  $('#adimBoyuGonder').click(function() {
+		  	var adimboyu = $('#AdimBoyu').val();
+		  	$.post(robot_ip+'/serial/sendSerial/adim_boyu,' + adimboyu);
+      	});
+		  $('#dur').click(function() {
+		  	$.post(robot_ip+'/serial/sendSerial/dur,0,0');
+      	});
+      $('#ileri').click(function() {
+	    var adim = $('#Adim').val();
+			var hiz = $('#Hiz').val();
+      	$.post(robot_ip+'/serial/sendSerial/ileri,'+adim+','+hiz);
+      	});  
+      $('#geri').click(function() {
+      			var adim = $('#Adim').val();
+      			var hiz = $('#Hiz').val();
+		          $.post(robot_ip+'/serial/sendSerial/geri,'+adim+','+hiz);
+      	});
+      $('#sol').click(function() {
+              var adim = $('#Adim').val();
+              var hiz = $('#Hiz').val();
+              $.post(robot_ip+'/serial/sendSerial/sol,'+adim+','+hiz);
+              });
+      $('#sag').click(function() {
+              var adim = $('#Adim').val();
+              var hiz = $('#Hiz').val();
+              $.post(robot_ip+'/serial/sendSerial/sag,'+adim+','+hiz);
+              });
+      $('#cammerkez').click(function() {
+              $.post(robot_ip+'/serial/sendSerial/pan,0');
+			        $.post(robot_ip+'/serial/sendSerial/tilt,0');
+              });
+      $('#camyukari').click(function() {
+              $.post(robot_ip+'/serial/sendSerial/tilt,'+$('#TiltAci').val());
+              });
+      $('#camasagi').click(function() {
+              $.post(robot_ip+'/serial/sendSerial/tilt,'+$('#TiltAci').val());
+              });
+      $('#camsol').click(function() {
+              $.post(robot_ip+'/serial/sendSerial/pan,'+$('#PanAci').val());
+              });
+      $('#camsag').click(function() {
+			        $.post(robot_ip+'/serial/sendSerial/pan,'+$('#PanAci').val());
+              });
+          });
+    	</script>
+
+      	<script>
+		function resetPanTilt() {
+			document.getElementById("TiltAci").value = "0"
+			document.getElementById("PanAci").value = "0"
+			}
+ 	</script>
