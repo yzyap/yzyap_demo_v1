@@ -79,16 +79,16 @@ def gen(vs):
   #the first image is a bit darker so i get 30 frames to initialize camera
   #and get rid of this dark first frame.
     # We give some time for the camera to setup
-  time.sleep(3)
+  #time.sleep(3)
 
-  for i in range(10):
-    success, image = video.read()
+  #for i in range(10):
+  #  success, image = video.read()
     
   #start the actual streaming
-  while video.isOpened():		
+  while True:		
     success, image = video.read()
-    frame = objDetector.runModel(image)
-    ret, jpeg = cv2.imencode('.jpg', frame)
+    #frame = objDetector.runModel(image)
+    ret, jpeg = cv2.imencode('.jpg', image)
     frame = jpeg.tobytes()
     yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 		

@@ -6,7 +6,7 @@
   grid-column-gap: 10px;
   /*grid-template-columns: 1fr minmax(500px,1fr) minmax(700px, 1fr);
   grid-template-rows: 50px minmax(500px,1fr) minmax(240px,1fr);*/
-  grid-template-columns: auto auto 640px;
+  grid-template-columns: 640px auto auto;
   grid-template-rows: 520px auto;
   /*background-color: #2196F3;*/
   padding: 0px;
@@ -21,17 +21,17 @@
 }
 
 .code_container{
-  grid-column: 1/3;
+  grid-column: 2/4;
   grid-row: 1/3;
 }
 
 .video_container{
-  grid-column: 3/4;
+  grid-column: 1/2;
   grid-row: 1/2;
 }
 
 .settings_container{
-  grid-column: 3/4;
+  grid-column: 1/2;
   grid-row: 2/3;
 }
 
@@ -93,6 +93,12 @@
 .run {
   background-position: -42px 0px;
   background-color: green;
+}
+
+#editor {
+    width: 100%;
+    height: 100%;
+    position: relative;
 }
 
 </style>

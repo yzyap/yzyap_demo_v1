@@ -28,13 +28,15 @@
       </div>      
     </div>
 
+    
     <!-- Tab content -->
     <div id="bloktab" class="codewindow_tabcontent">
       <div id="blocklyDiv" style="height: 100%; width: 100%;"></div>      
     </div>
 
     <div id="pythontab" class="codewindow_tabcontent">
-      <div id="sourceCode"></div>
+      <div id="editor" style="height: 100%; width: 100%;">       
+      </div>  
     </div>
 
     <div id="yztab" class="codewindow_tabcontent">
@@ -51,14 +53,14 @@
   <div id = "settingsWindow" class="grid-item settings_container">
     <div class = "tab"  id="tabButton" style="padding:10px">
       <button class="tablinks">Robot</button>
-      <button class="tablinks">Mesajlar</button>
-      {% include "streamapp/robot_hareket.html" %}      
-    </div>    
+      <button class="tablinks">Mesajlar</button>      
+    </div>  
+    {% include "streamapp/robot_hareket.html" %}
   </div>  
 </div>
 
 {% include "streamapp/blockly.html" %}
-{% include "streamapp/styles.html" %}
+
 
 {% endblock %}
 
@@ -68,7 +70,8 @@
 <script src="{% static "/js/python_compressed.js" %}"></script>
 <script src="{% static "/js/blocks_compressed.js" %}"></script>
 <script src="{% static "/js/en.js" %}"></script>
-<script src="{% static "/js/robot.js" %}"></script>  
+<script src="{% static "/js/robot.js" %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js" type="text/javascript" charset="utf-8"></script>  
 <!--<script src="{% static "/js/code.js" %}"></script> -->
 
 {% include "streamapp/code.html" %}
@@ -78,6 +81,7 @@
 
 
 {% block stylesheet %}
+{% include "streamapp/styles.html" %}
   <!--<link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}">-->
 {% endblock %}
 

@@ -72,12 +72,10 @@ function fBodyResize(evt)
 
 function fPageLoad(evt)
 {
-
   fBodyResize();
-
   openTab(evt,"bloktab")     
-
-  resetPanTilt();       
+  resetPanTilt();  
+  editor.resize();     
 }
 
 function openTab(evt, tabName) {
@@ -119,9 +117,11 @@ function openTab(evt, tabName) {
 
   else if(tabName == "pythontab"){
     var code = Blockly.Python.workspaceToCode(demoWorkspace);
-    code = code.replace(/ /g, '\u00a0');
-    code = code.replace(/\n/g, "<br />");
-    document.getElementById("sourceCode").innerHTML = code;
+    //code = code.replace(/ /g, '\u00a0');
+    //code = code.replace(/\n/g, "<br />");
+    //document.getElementById("editor").innerHTML = code;
+
+    editor.session.setValue(code);
   }
 }
 
@@ -144,5 +144,13 @@ function loadWorkspace() {
 function clearWorkspace(){
   Blockly.mainWorkspace.clear();
 }
+
+
+var editor = ace.edit("editor");
+editor.setTheme("ace/theme/monokai");
+editor.session.setMode("ace/mode/python");
+editor.setFontSize("24px");
+editor.setReadOnly(true);  // false to make it editable
+
 
 </script>
